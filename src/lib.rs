@@ -32,13 +32,18 @@ pub fn run(config: Config) -> MyResult<()> {
             Ok(reader) => {
                 let mut count_nonblank_lines = 1;
                 for (line_num, line) in reader.lines().enumerate() {
-                    let val = line.unwrap();
+                    let val = line?;
                     if config.number_lines {
-                        println!("{:>6}\t{}",line_num, val);
+                        println!("{:>6}\t{}",line_num + 1, val);
                     }
                     else if config.number_nonblank_lines {
-                        println!("{:>6}\t{}",count_nonblank_lines, val);
-                        count_nonblank_lines +=1;
+                        if !val.is_empty() {
+                            println!("{:>6}\t{}",count_nonblank_lines, val);
+                            count_nonblank_lines +=1;
+                        }
+                        else {
+                            println!("{}",val);
+                        }
                     }
                     else {
                         println!("{}",val);
